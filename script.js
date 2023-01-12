@@ -2,10 +2,35 @@ const Apikey = "8fee0ba025c40be55108dfce2bc435df"
 const searchInput = document.getElementById("search-input")
 const searchButton = document.getElementById("search-button")
 const fiveDayCards = document.getElementsByClassName("card")
+const searchHistory = document.getElementById("search-history")
+const searchResultWrapper = document.getElementById("search-result-wrapper")
+const PopulateSearchHistory = ()=>{
+    searchHistory.innerHTML = null
+    const PreviousSearches =Object.keys(localStorage)
+for (let i = 0; i < PreviousSearches.length; i++) {
+    const cityName = PreviousSearches[i];
+    const listItem = document.createElement("li");
+    listItem.classList.add("search-history-buttons");
+    listItem.innerText = cityName
+    searchHistory.appendChild(listItem);
+}
 
-searchButton.addEventListener("click", (e)=>{
+const cityButtons = document.getElementsByClassName('search-history-buttons')
+
+for(const cityButton of cityButtons){
+    cityButton.addEventListener('click', (e) => {
+    console.log('clicked')
     e.preventDefault()
-    const city = searchInput.value 
+    const cityName  = cityButton.innerText
+    fetchData(cityName)
+        
+    })
+}
+}
+PopulateSearchHistory()
+
+const fetchData = (city)=>{
+    searchResultWrapper.style.display = "block"
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${Apikey}&units=imperial`
     fetch(url).then((response)=>{
         return response.json()
@@ -25,6 +50,7 @@ searchButton.addEventListener("click", (e)=>{
         const imageSlot = currentForecast.children[1]
         imageSlot.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
         localStorage.setItem(data.name, data.name)
+        PopulateSearchHistory()
         console.log(data)
         return fetch(fiveDayUrl)
     }).then((response)=> {
@@ -55,6 +81,12 @@ searchButton.addEventListener("click", (e)=>{
     })
 
     
+}
+
+searchButton.addEventListener("click", (e)=>{
+    e.preventDefault()
+    const city = searchInput.value 
+    fetchData(city)  
 })
 
 
@@ -67,3 +99,5 @@ const parseAndPopulateDate = (dateTimeString, elementToPopulate, splitCriteria, 
     }
     elementToPopulate.textContent= cityString + `${month}/${day}/${year}`
 }
+
+

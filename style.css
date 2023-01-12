@@ -1,0 +1,22 @@
+.cards-wrapper {
+    display: flex;
+    
+
+}
+
+#search-result-wrapper {
+    display: none;
+}
+
+#weather-dashboard {
+    text-align: center;
+}
+
+.container-fluid {
+    background-color: powderblue;
+}
+
+#search-button {
+    background-color: lightgoldenrodyellow;
+}
+
